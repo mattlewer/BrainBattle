@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/game_navigation"
+    app:startDestination="@id/fragmentGameLobby">
+
+    <fragment
+        android:id="@+id/fragmentGameLobby"
+        android:name="com.msl5.multiplayerquiz.ui.FragmentGameLobby"
+        android:label="fragment_game_lobby"
+        tools:layout="@layout/fragment_game_lobby" >
+        <action
+            android:id="@+id/action_fragmentGameLobby_to_fragmentGameQuestion"
+            app:destination="@id/fragmentGameQuestion" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentGameQuestion"
+        android:name="com.msl5.multiplayerquiz.ui.FragmentGameQuestion"
+        android:label="fragment_game_question"
+        tools:layout="@layout/fragment_game_question" >
+        <action
+            android:id="@+id/action_fragmentGameQuestion_to_fragmentGameOver"
+            app:destination="@id/fragmentGameOver" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentGameOver"
+        android:name="com.msl5.multiplayerquiz.ui.FragmentGameOver"
+        android:label="fragment_game_over"
+        tools:layout="@layout/fragment_game_over" />
+</navigation>

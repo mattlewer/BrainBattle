@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "718816032386",
+    "firebase_url": "https://kotlin-multiplayer-quiz-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "kotlin-multiplayer-quiz",
+    "storage_bucket": "kotlin-multiplayer-quiz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718816032386:android:ee802d75a1e4caf651e69b",
+        "android_client_info": {
+          "package_name": "com.msl5.multiplayerquiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "718816032386-dvp9uokc9a2g65h66au8h6q64esmk1uf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-uvfyk_f-jDB6o-ifCMEiYr4tPyrDDU4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "718816032386-dvp9uokc9a2g65h66au8h6q64esmk1uf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">FirebaseMultiplayerQuiz</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+    <!-- Intro page   -->
+    <string name="room_code">Room Code</string>
+    <string name="room_code_hint">4 letter room code...</string>
+    <string name="name">Name</string>
+    <string name="name_hint">Name you wish to be visible as...</string>
+    <string name="join_btn">Join Game</string>
+    <string name="create_btn">Create Game</string>
+</resources>
