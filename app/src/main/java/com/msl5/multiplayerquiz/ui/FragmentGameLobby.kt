@@ -29,8 +29,9 @@ class FragmentGameLobby : Fragment() {
     private var _binding: FragmentGameLobbyBinding? = null
     private val binding get() = _binding!!
     private var navController : NavController? = null
-
     private lateinit var hostListener: ValueEventListener
+    private lateinit var userListener: ValueEventListener
+    private lateinit var gameStartListener: ValueEventListener
     private lateinit var startGameBtn : Button
     private lateinit var adapter : LobbyUserRecycler
     private var users = mutableListOf<User>()
@@ -50,7 +51,6 @@ class FragmentGameLobby : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             onBackPressed()
         }
-
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -62,7 +62,6 @@ class FragmentGameLobby : Fragment() {
     fun listenToHost(){
         hostListener = FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("host").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                println("HOST LISTENER APPLIED")
                 host = snapshot.value.toString()
                 if(host == username) {
                     startGameBtn.visibility = View.VISIBLE
@@ -82,7 +81,7 @@ class FragmentGameLobby : Fragment() {
 
 
     fun listenForUsers(){
-        FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("users").addValueEventListener(
+        userListener = FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("users").addValueEventListener(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var tempList = mutableListOf<User>()
@@ -100,24 +99,22 @@ class FragmentGameLobby : Fragment() {
 
     fun prepareRecycler(){
         var recyclerView: RecyclerView = binding.usersRecycler
-        adapter = LobbyUserRecycler(users, host)
+        adapter = LobbyUserRecycler(users, host, binding.root.context)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(binding.root.context)
         recyclerView.setHasFixedSize(true)
     }
-
 
     fun startGame(){
         FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("status").setValue("InProgress")
     }
 
     fun listenForGameStart(){
-
-        FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("status").addValueEventListener(
+        gameStartListener = FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("status").addValueEventListener(
             object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if(snapshot.value.toString() == "InProgress"){
-                        FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("host").removeEventListener(hostListener)
+                        removeListeners()
                         binding.pulseCountDown.visibility = View.VISIBLE
                         binding.pulseCountDown.start()
                         var timer = object: CountDownTimer(5000, 1000){
@@ -139,15 +136,22 @@ class FragmentGameLobby : Fragment() {
 
     fun onBackPressed() {
         if(host == username){
-            FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("host").removeEventListener(hostListener)
+            removeListeners()
             FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).removeValue()
             Toast.makeText(binding.root.context, "You have ended the game.", Toast.LENGTH_SHORT).show()
             requireActivity().finish()
         }else{
+            removeListeners()
             FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("users").child(username).removeValue()
             Toast.makeText(binding.root.context, "Left Game!", Toast.LENGTH_SHORT).show()
             requireActivity().finish()
         }
+    }
+
+    fun removeListeners(){
+        FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("host").removeEventListener(hostListener)
+        FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("users").removeEventListener(userListener)
+        FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("status").removeEventListener(gameStartListener)
     }
 
 

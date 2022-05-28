@@ -22,7 +22,6 @@ import com.msl5.multiplayerquiz.databinding.FragmentGameQuestionBinding
 import com.msl5.multiplayerquiz.dataclass.Answer
 import com.msl5.multiplayerquiz.dataclass.Quiz
 import com.msl5.multiplayerquiz.dataclass.User
-import com.msl5.multiplayerquiz.dataclass.UserAnswer
 import com.msl5.multiplayerquiz.recyclers.AnswerRecycler
 
 class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
@@ -32,16 +31,13 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
     private lateinit var adapter : AnswerRecycler
     private var navController : NavController? = null
     private lateinit var hostListener: ValueEventListener
+    private lateinit var answerListener: ValueEventListener
     private lateinit var quiz: Quiz
-
     private var questionNum = 0
     private var question = ""
-
     private lateinit var answers: MutableList<Answer>
-
     private lateinit var timer: CountDownTimer
     private lateinit var submitBtn: Button
-
     private var selectedAnswer = ""
     var host = "";
 
@@ -52,6 +48,7 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
         _binding = FragmentGameQuestionBinding.inflate(inflater, container, false)
         observeQuiz()
         listenToHost()
+        listenForAllAnswers()
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             onBackPressed()
         }
@@ -77,6 +74,23 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
                 }
             })
 
+    }
+
+    fun listenForAllAnswers(){
+        answerListener = FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).addValueEventListener(
+                object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        var length = snapshot.child("users").childrenCount.toInt()
+                        if(snapshot.child("quiz").child("results").child(questionNum.toString()).child("user_answers").childrenCount.toInt() == length){
+                            timer.onFinish()
+                        }
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                }
+        )
     }
 
     fun setupQuiz(){
@@ -132,6 +146,7 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
                 binding.timeLeftText.text = (p0 / 1000).toInt().toString()
             }
             override fun onFinish() {
+                timer.cancel()
                 FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("quiz").child("results").child(questionNum.toString()).child("user_answers").addListenerForSingleValueEvent(
                         object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
@@ -140,21 +155,29 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
                                         it.answer == e.getValue(String::class.java)
                                     }!!.apply {
                                         if(e.key!! != username){
-                                            this.answered.add(e.key!!)
+                                            FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("users").child(e.key!!).addListenerForSingleValueEvent(
+                                                    object: ValueEventListener{
+                                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                                            this@apply.answered.add(User(e.key!!, 0, snapshot.child("color").getValue(String::class.java)))
+                                                            adapter.notifyDataSetChanged()
+                                                        }
+                                                        override fun onCancelled(error: DatabaseError) {
+                                                            TODO("Not yet implemented")
+                                                        }
+                                                    }
+                                            )
                                         }
                                     }
-                                    adapter.notifyDataSetChanged()
                                 }
                             }
                             override fun onCancelled(error: DatabaseError) {
-                                TODO("Not yet implemented")
+
                             }
                         })
 
                 adapter.isSubmitted = true
                 adapter.notifyDataSetChanged()
                 adapter.isReview = true
-
                 adapter.correctAnswer = answers.indexOfFirst { it.answer ==  quiz.results[questionNum].correct_answer}
                 adapter.notifyDataSetChanged()
                 startShowCorrectAnswerTimer()
@@ -163,7 +186,7 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
     }
 
     fun startShowCorrectAnswerTimer(){
-        timer = object: CountDownTimer(3000, 1000){
+        var timer = object: CountDownTimer(5000, 1000){
             override fun onTick(p0: Long) {
                 // Do nothing
             }
@@ -178,7 +201,7 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
         if(questionNum == quiz.results.size){
             // GAME OVER
             FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("host").removeEventListener(hostListener)
-
+            FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).removeEventListener(answerListener )
             navController!!.navigate(R.id.action_fragmentGameQuestion_to_fragmentGameOver)
         }else{
             setupQuiz()
@@ -192,6 +215,7 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
     fun submitAnswer(){
         if(selectedAnswer != ""){
             if(selectedAnswer == quiz.results[questionNum].correct_answer){
+                // ADD QUESTION DIFFICULTY SCORE CHANGE HERE
                 FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("users").child(username).child("score").setValue(ServerValue.increment(1));
             }
             FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("quiz").child("results").child(questionNum.toString()).child("user_answers").child(username).setValue(selectedAnswer)
@@ -215,6 +239,7 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(intent)
                     FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("host").removeEventListener(hostListener)
+                    FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).removeEventListener(answerListener )
                 }
             }
             override fun onCancelled(databaseError: DatabaseError) {}
@@ -228,6 +253,8 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
             Toast.makeText(binding.root.context, "You have ended the game.", Toast.LENGTH_SHORT).show()
             requireActivity().finish()
         }else{
+            FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("host").removeEventListener(hostListener)
+            FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).removeEventListener(answerListener )
             FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("users").child(username).removeValue()
             Toast.makeText(binding.root.context, "Left Game!", Toast.LENGTH_SHORT).show()
             requireActivity().finish()

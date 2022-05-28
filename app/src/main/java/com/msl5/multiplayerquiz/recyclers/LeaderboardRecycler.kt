@@ -1,5 +1,6 @@
 package com.msl5.multiplayerquiz.recyclers
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,10 @@ class LeaderboardRecycler(private val users: MutableList<User>) : RecyclerView.A
         holder.positionText.text = "#" + (position + 1).toString()
         holder.usernameScoreboardText.text = users[position].username
         holder.userScoreText.text = "Score: " + users[position].score.toString()
+
+        holder.positionText.setTextColor(Color.parseColor(users[position].color.toString()))
+        holder.userScoreText.setTextColor(Color.parseColor(users[position].color.toString()))
+        holder.leaderBoardSeperator.setBackgroundColor(Color.parseColor(users[position].color.toString()))
     }
 
     // Always returns items.size
@@ -31,5 +36,6 @@ class LeaderboardRecycler(private val users: MutableList<User>) : RecyclerView.A
         var positionText = itemView.findViewById<TextView>(R.id.positionText)
         var usernameScoreboardText = itemView.findViewById<TextView>(R.id.usernameScoreboardText)
         var userScoreText = itemView.findViewById<TextView>(R.id.userScoreText)
+        var leaderBoardSeperator = itemView.findViewById<View>(R.id.leaderBoardSeperator)
     }
 }

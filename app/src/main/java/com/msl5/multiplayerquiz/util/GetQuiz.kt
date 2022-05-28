@@ -29,7 +29,7 @@ class GetQuiz {
                 try {
                     FirebaseDatabase.getInstance(URL).reference.child("rooms").child(code).child("quiz").setValue(response.body()!!)
                 } catch (e: NullPointerException) {
-                    println("Quiz empty")
+                    // NO QUIZ
                 }
             }
             override fun onFailure(call: Call<Quiz>, t: Throwable) {

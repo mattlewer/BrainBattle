@@ -19,6 +19,5 @@
     <style name="Divider">
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/light_green</item>
     </style>
 </resources>

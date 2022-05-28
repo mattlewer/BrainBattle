@@ -9,7 +9,8 @@ data class Room(
 
 data class User(
     var username: String? = "",
-    var score: Int = 0
+    var score: Int = 0,
+    var color: String? = ""
 )
 
 data class Quiz(
@@ -27,7 +28,8 @@ data class Question(
 
 data class Answer(
         var answer: String = "",
-        var answered: MutableList<String> = mutableListOf()
+//        var answered: MutableList<String> = mutableListOf()
+        var answered: MutableList<User> = mutableListOf()
 )
 
 data class UserAnswer(

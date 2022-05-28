@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
-            android:id="@+id/view"
+            android:id="@+id/leaderBoardSeperator"
             style="@style/Divider"
             android:layout_marginVertical="10dp"
             android:layout_marginStart="24dp"
@@ -43,7 +43,7 @@
             android:text="Username"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/view"
+            app:layout_constraintStart_toEndOf="@+id/leaderBoardSeperator"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

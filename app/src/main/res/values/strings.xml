@@ -7,7 +7,7 @@
 
     <!-- Intro page   -->
     <string name="room_code">Room Code</string>
-    <string name="room_code_hint">4 letter room code...</string>
+    <string name="room_code_hint">Room code...</string>
     <string name="name">Name</string>
     <string name="name_hint">Name you wish to be visible as...</string>
     <string name="join_btn">Join Game</string>

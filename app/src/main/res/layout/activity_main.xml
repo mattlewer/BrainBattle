@@ -52,7 +52,6 @@
             android:id="@+id/editCodeText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:backgroundTint="@color/font_primary"
             android:ems="10"
             android:hint="@string/room_code_hint"
@@ -61,6 +60,15 @@
             android:textColorHint="@color/font_hint" />
 
         <TextView
+            android:id="@+id/editRoomCodeTextCount"
+            android:gravity="end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0/6"
+            android:textColor="@color/light_green"/>
+
+        <TextView
+            android:layout_marginTop="20dp"
             android:id="@+id/nameHeaderText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,6 +77,7 @@
             android:textColorHint="@color/font_primary" />
 
         <EditText
+            android:maxLength="10"
             android:id="@+id/editNameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,6 +87,14 @@
             android:inputType="textPersonName"
             android:textColor="@color/font_primary"
             android:textColorHint="@color/font_hint" />
+
+        <TextView
+            android:id="@+id/usernameTextCount"
+            android:gravity="end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0/12"
+            android:textColor="@color/light_green"/>
 
     </LinearLayout>
 
@@ -130,7 +147,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:text="Preparing Quiz..."
+        android:text="Loading Quiz..."
         app:layout_constraintEnd_toEndOf="@+id/progressBarLoading"
         app:layout_constraintStart_toStartOf="@+id/progressBarLoading"
         app:layout_constraintTop_toBottomOf="@+id/progressBarLoading" />

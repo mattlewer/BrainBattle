@@ -1,6 +1,7 @@
 package com.msl5.multiplayerquiz.recyclers
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +50,9 @@ class AnswerRecycler(private val answers: MutableList<Answer>, private val liste
             }
             holder.answerCard.isClickable = false
             if(answers[position].answered.size != 0) {
-                holder.whoAnsweredText.text = "^ " + answers[position].answered.joinToString(separator = ", ") + " answered!"
+                answers[position].answered.forEachIndexed { i, element ->
+                    holder.answerTabs[i].setBackgroundColor(Color.parseColor(element.color.toString()))
+                }
             }
         }
     }
@@ -61,7 +64,17 @@ class AnswerRecycler(private val answers: MutableList<Answer>, private val liste
     inner class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
         var answerCard = itemView.findViewById<ConstraintLayout>(R.id.answerCard)
         var answerText = itemView.findViewById<TextView>(R.id.answerText)
-        var whoAnsweredText = itemView.findViewById<TextView>(R.id.whoAnsweredtext)
+        var answeredTab1 = itemView.findViewById<View>(R.id.answeredTab1)
+        var answeredTab2 = itemView.findViewById<View>(R.id.answeredTab2)
+        var answeredTab3 = itemView.findViewById<View>(R.id.answeredTab3)
+        var answeredTab4 = itemView.findViewById<View>(R.id.answeredTab4)
+        var answeredTab5 = itemView.findViewById<View>(R.id.answeredTab5)
+        var answeredTab6 = itemView.findViewById<View>(R.id.answeredTab6)
+        var answeredTab7 = itemView.findViewById<View>(R.id.answeredTab7)
+        var answeredTab8 = itemView.findViewById<View>(R.id.answeredTab8)
+        var answeredTab9 = itemView.findViewById<View>(R.id.answeredTab9)
+        var answeredTab10 = itemView.findViewById<View>(R.id.answeredTab10)
+        var answerTabs = listOf<View>(answeredTab1,answeredTab2,answeredTab3,answeredTab4,answeredTab5,answeredTab6,answeredTab7,answeredTab8,answeredTab9,answeredTab10)
 
         init{
             answerCard.setOnClickListener(this)
