@@ -5,12 +5,16 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.msl5.multiplayerquiz.R
 import com.msl5.multiplayerquiz.dataclass.User
+import com.msl5.multiplayerquiz.util.GetImage
 
 class LobbyUserRecycler(private val users: MutableList<User>, private val host: String, private val context : Context) : RecyclerView.Adapter<LobbyUserRecycler.CardViewHolder>()  {
+
+    var getImage = GetImage()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.layout_lobby_user, parent, false)
         return CardViewHolder(itemView)
@@ -28,6 +32,7 @@ class LobbyUserRecycler(private val users: MutableList<User>, private val host: 
         // Set static card information
         holder.usernameText.text = users[position].username
         holder.hostTab.setBackgroundColor(Color.parseColor(users[position].color!!))
+        holder.userImg.setImageResource(getImage.getImageFromAssets(users[position].image!!))
 
     }
 
@@ -46,6 +51,7 @@ class LobbyUserRecycler(private val users: MutableList<User>, private val host: 
         var usernameText = itemView.findViewById<TextView>(R.id.usernameText)
         var hostTab = itemView.findViewById<View>(R.id.userColorTab)
         var hostText = itemView.findViewById<TextView>(R.id.hostText)
+        var userImg = itemView.findViewById<ImageView>(R.id.userImg)
 
     }
 }

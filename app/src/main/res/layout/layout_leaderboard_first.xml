@@ -35,9 +35,12 @@
             android:layout_height="130dp"
             app:cardCornerRadius="65dp"
             app:strokeWidth="4dp">
-
-
-
+            <ImageView
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:id="@+id/topThreeCardUserCardViewImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
         </com.google.android.material.card.MaterialCardView>
 
         <TextView

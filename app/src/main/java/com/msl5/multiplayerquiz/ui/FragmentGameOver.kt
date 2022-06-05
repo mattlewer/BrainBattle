@@ -1,11 +1,13 @@
 package com.msl5.multiplayerquiz.ui
 
 import android.graphics.Color
+import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -24,6 +26,7 @@ import com.msl5.multiplayerquiz.*
 import com.msl5.multiplayerquiz.databinding.FragmentGameOverBinding
 import com.msl5.multiplayerquiz.dataclass.User
 import com.msl5.multiplayerquiz.recyclers.LeaderboardRecycler
+import com.msl5.multiplayerquiz.util.GetImage
 
 
 class FragmentGameOver : Fragment() {
@@ -104,7 +107,7 @@ class FragmentGameOver : Fragment() {
                 var topThreeCardUserCardView = cardView.root.findViewById<MaterialCardView>(R.id.topThreeCardUserCardView)
                 var topThreeCardUserInitials = cardView.root.findViewById<TextView>(R.id.topThreeCardUserInitials)
                 var topThreePointsCard = cardView.root.findViewById<TextView>(R.id.topThreePointsText)
-
+                var topThreeCardUserCardViewImage = cardView.root.findViewById<ImageView>(R.id.topThreeCardUserCardViewImage)
                 topThreePointsPosition.text = "#" + (index + 1).toString()
                 var cardRingColour = 0
                 when(index){
@@ -114,6 +117,8 @@ class FragmentGameOver : Fragment() {
                     else -> cardRingColour = ContextCompat.getColor(binding.root.context, R.color.gold)
                 }
                 topThreeCardUserCardView.strokeColor = cardRingColour
+                var getImage = GetImage()
+                topThreeCardUserCardViewImage.setImageResource(getImage.getImageFromAssets(users[index].image!!))
                 topThreeCardUserCardView.setCardBackgroundColor(Color.parseColor(users[index].color.toString()))
                 topThreeCardUserInitials.text = users[index].username
                 topThreePointsCard.text = users[index].score.toString()

@@ -5,10 +5,12 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -18,6 +20,7 @@ import com.msl5.multiplayerquiz.URL
 import com.msl5.multiplayerquiz.dataclass.Answer
 import com.msl5.multiplayerquiz.dataclass.Quiz
 import com.msl5.multiplayerquiz.roomCode
+import com.msl5.multiplayerquiz.util.GetImage
 
 class AnswerRecycler(private val answers: MutableList<Answer>, private val listener: OnItemClickListener, val context: Context): RecyclerView.Adapter<AnswerRecycler.CardViewHolder>()  {
 
@@ -25,7 +28,7 @@ class AnswerRecycler(private val answers: MutableList<Answer>, private val liste
     var correctAnswer = -1
     var isSubmitted = false
     var isReview = false
-
+    var getImage = GetImage()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.layout_answer, parent, false)
         return CardViewHolder(itemView)
@@ -38,8 +41,8 @@ class AnswerRecycler(private val answers: MutableList<Answer>, private val liste
         holder.answerText.setTextColor(if(selected_position == position) ContextCompat.getColor(context, R.color.white) else ContextCompat.getColor(context, R.color.default_font))
         holder.answerCard.setBackgroundResource(if(selected_position == position) R.drawable.button_primary_bg else R.drawable.button_secondary_bg)
         if(isSubmitted){
-            holder.answerText.setTextColor(if(selected_position == position) ContextCompat.getColor(context, R.color.font_hint) else ContextCompat.getColor(context, R.color.white))
-            holder.answerCard.setBackgroundResource(if(selected_position == position) R.drawable.button_disabled_bg_hollow else R.drawable.button_disabled_bg)
+            holder.answerText.setTextColor(if(selected_position == position) ContextCompat.getColor(context, R.color.white) else ContextCompat.getColor(context, R.color.font_hint))
+            holder.answerCard.setBackgroundResource(if(selected_position == position) R.drawable.button_disabled_bg else R.drawable.button_disabled_bg_hollow)
             holder.answerCard.isClickable = false
         }
 
@@ -51,7 +54,9 @@ class AnswerRecycler(private val answers: MutableList<Answer>, private val liste
             holder.answerCard.isClickable = false
             if(answers[position].answered.size != 0) {
                 answers[position].answered.forEachIndexed { i, element ->
-                    holder.answerTabs[i].setBackgroundColor(Color.parseColor(element.color.toString()))
+                    holder.answerTabOutline[i].visibility = View.VISIBLE
+                    holder.answerTabOutline[i].strokeColor = Color.parseColor(element.color.toString())
+                    holder.answerTabImages[i].setBackgroundResource(getImage.getImageFromAssets(element.image!!))
                 }
             }
         }
@@ -64,17 +69,31 @@ class AnswerRecycler(private val answers: MutableList<Answer>, private val liste
     inner class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
         var answerCard = itemView.findViewById<ConstraintLayout>(R.id.answerCard)
         var answerText = itemView.findViewById<TextView>(R.id.answerText)
-        var answeredTab1 = itemView.findViewById<View>(R.id.answeredTab1)
-        var answeredTab2 = itemView.findViewById<View>(R.id.answeredTab2)
-        var answeredTab3 = itemView.findViewById<View>(R.id.answeredTab3)
-        var answeredTab4 = itemView.findViewById<View>(R.id.answeredTab4)
-        var answeredTab5 = itemView.findViewById<View>(R.id.answeredTab5)
-        var answeredTab6 = itemView.findViewById<View>(R.id.answeredTab6)
-        var answeredTab7 = itemView.findViewById<View>(R.id.answeredTab7)
-        var answeredTab8 = itemView.findViewById<View>(R.id.answeredTab8)
-        var answeredTab9 = itemView.findViewById<View>(R.id.answeredTab9)
-        var answeredTab10 = itemView.findViewById<View>(R.id.answeredTab10)
-        var answerTabs = listOf<View>(answeredTab1,answeredTab2,answeredTab3,answeredTab4,answeredTab5,answeredTab6,answeredTab7,answeredTab8,answeredTab9,answeredTab10)
+
+        var answeredCircle1 = itemView.findViewById<MaterialCardView>(R.id.answeredCircle1)
+        var answeredCircle2 = itemView.findViewById<MaterialCardView>(R.id.answeredCircle2)
+        var answeredCircle3 = itemView.findViewById<MaterialCardView>(R.id.answeredCircle3)
+        var answeredCircle4 = itemView.findViewById<MaterialCardView>(R.id.answeredCircle4)
+        var answeredCircle5 = itemView.findViewById<MaterialCardView>(R.id.answeredCircle5)
+        var answeredCircle6 = itemView.findViewById<MaterialCardView>(R.id.answeredCircle6)
+        var answeredCircle7 = itemView.findViewById<MaterialCardView>(R.id.answeredCircle7)
+        var answeredCircle8 = itemView.findViewById<MaterialCardView>(R.id.answeredCircle8)
+        var answeredCircle9 = itemView.findViewById<MaterialCardView>(R.id.answeredCircle9)
+        var answeredCircle10 = itemView.findViewById<MaterialCardView>(R.id.answeredCircle10)
+
+        var answeredCircleImage1 = itemView.findViewById<ImageView>(R.id.answeredCircleImage1)
+        var answeredCircleImage2 = itemView.findViewById<ImageView>(R.id.answeredCircleImage2)
+        var answeredCircleImage3 = itemView.findViewById<ImageView>(R.id.answeredCircleImage3)
+        var answeredCircleImage4 = itemView.findViewById<ImageView>(R.id.answeredCircleImage4)
+        var answeredCircleImage5 = itemView.findViewById<ImageView>(R.id.answeredCircleImage5)
+        var answeredCircleImage6 = itemView.findViewById<ImageView>(R.id.answeredCircleImage6)
+        var answeredCircleImage7 = itemView.findViewById<ImageView>(R.id.answeredCircleImage7)
+        var answeredCircleImage8 = itemView.findViewById<ImageView>(R.id.answeredCircleImage8)
+        var answeredCircleImage9 = itemView.findViewById<ImageView>(R.id.answeredCircleImage9)
+        var answeredCircleImage10 = itemView.findViewById<ImageView>(R.id.answeredCircleImage10)
+
+        var answerTabOutline = listOf<MaterialCardView>(answeredCircle1,answeredCircle2,answeredCircle3,answeredCircle4,answeredCircle5,answeredCircle6,answeredCircle7,answeredCircle8,answeredCircle9,answeredCircle10)
+        var answerTabImages = listOf<ImageView>(answeredCircleImage1,answeredCircleImage2,answeredCircleImage3,answeredCircleImage4,answeredCircleImage5,answeredCircleImage6,answeredCircleImage7,answeredCircleImage8,answeredCircleImage9,answeredCircleImage10)
 
         init{
             answerCard.setOnClickListener(this)

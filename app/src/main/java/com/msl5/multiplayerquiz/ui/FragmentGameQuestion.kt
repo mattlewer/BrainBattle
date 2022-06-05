@@ -108,7 +108,7 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
             tempAnswers.add(Answer(it, mutableListOf()))
         }
         answers = tempAnswers
-
+        binding.questionNumberText.text = (questionNum + 1).toString() + "/" + quiz.results.size.toString()
         binding.questionCategoryText.text = quiz.results[questionNum].category
         submitBtn.isEnabled = true
         submitBtn.setBackgroundResource(R.drawable.button_primary_bg)
@@ -158,7 +158,7 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
                                             FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("users").child(e.key!!).addListenerForSingleValueEvent(
                                                     object: ValueEventListener{
                                                         override fun onDataChange(snapshot: DataSnapshot) {
-                                                            this@apply.answered.add(User(e.key!!, 0, snapshot.child("color").getValue(String::class.java)))
+                                                            this@apply.answered.add(snapshot.getValue(User::class.java)!!)
                                                             adapter.notifyDataSetChanged()
                                                         }
                                                         override fun onCancelled(error: DatabaseError) {
@@ -178,7 +178,7 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
                 adapter.isSubmitted = true
                 adapter.notifyDataSetChanged()
                 adapter.isReview = true
-                adapter.correctAnswer = answers.indexOfFirst { it.answer ==  quiz.results[questionNum].correct_answer}
+                adapter.correctAnswer = answers.indexOfFirst { it.answer ==  removeHTMLElementText(quiz.results[questionNum].correct_answer!!)}
                 adapter.notifyDataSetChanged()
                 startShowCorrectAnswerTimer()
             }
@@ -215,8 +215,13 @@ class FragmentGameQuestion : Fragment(), AnswerRecycler.OnItemClickListener {
     fun submitAnswer(){
         if(selectedAnswer != ""){
             if(selectedAnswer == quiz.results[questionNum].correct_answer){
-                // ADD QUESTION DIFFICULTY SCORE CHANGE HERE
-                FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("users").child(username).child("score").setValue(ServerValue.increment(1));
+                var points : Long = when(quiz.results[questionNum].difficulty){
+                    "easy" -> 1
+                    "medium" -> 2
+                    "hard" -> 3
+                    else -> 1
+                }
+                FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("users").child(username).child("score").setValue(ServerValue.increment(points));
             }
             FirebaseDatabase.getInstance(URL).reference.child("rooms").child(roomCode).child("quiz").child("results").child(questionNum.toString()).child("user_answers").child(username).setValue(selectedAnswer)
             adapter.isSubmitted = true

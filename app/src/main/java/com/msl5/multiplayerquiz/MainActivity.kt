@@ -14,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.msl5.multiplayerquiz.dataclass.Room
 import com.msl5.multiplayerquiz.dataclass.User
+import com.msl5.multiplayerquiz.util.GetImage
 import com.msl5.multiplayerquiz.util.GetQuiz
 
 var URL = "https://kotlin-multiplayer-quiz-default-rtdb.europe-west1.firebasedatabase.app/"
@@ -95,7 +96,8 @@ class MainActivity : AppCompatActivity() {
                                     .setValue(
                                             room
                                     )
-                            FirebaseDatabase.getInstance(URL).reference.child("rooms").child(code).child("users").child(username).setValue(User(username, 0, "#41b4a5"))
+                            var getImage = GetImage()
+                            FirebaseDatabase.getInstance(URL).reference.child("rooms").child(code).child("users").child(username).setValue(User(username, 0, "#41b4a5", getImage.getImageFromPos(0)))
                             color = "#41b4a5"
                             var getQuiz = GetQuiz()
                             getQuiz.getData()
@@ -142,7 +144,8 @@ class MainActivity : AppCompatActivity() {
                                 var allColors = listOf(colorsFirstRow, colorsSecondRow, colorsThirdRow)
                                 var colour = allColors[(0..2).random()][numUsers - 1]
                                 color = colour
-                                FirebaseDatabase.getInstance(URL).reference.child("rooms").child(code).child("users").child(username).setValue(User(username, 0, colour))
+                                var getImage = GetImage()
+                                FirebaseDatabase.getInstance(URL).reference.child("rooms").child(code).child("users").child(username).setValue(User(username, 0, colour, getImage.getImageFromPos(numUsers)))
                                 roomCode = code
                                 accepted()
                             } else {
@@ -226,6 +229,7 @@ class MainActivity : AppCompatActivity() {
         joinBtn.visibility = View.VISIBLE
         editCodeText.visibility = View.VISIBLE
         editCodeTextCount.visibility = View.VISIBLE
+        usernameTextCount.visibility = View.VISIBLE
         editNameText.visibility = View.VISIBLE
         progressBarLoading.visibility = View.GONE
         progressBarLoadingText.visibility = View.GONE
@@ -241,6 +245,7 @@ class MainActivity : AppCompatActivity() {
         joinBtn.visibility = View.GONE
         editCodeText.visibility = View.GONE
         editCodeTextCount.visibility = View.GONE
+        usernameTextCount.visibility = View.GONE
         editNameText.visibility = View.GONE
         progressBarLoading.visibility = View.VISIBLE
         progressBarLoadingText.visibility = View.VISIBLE

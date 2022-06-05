@@ -10,7 +10,8 @@ data class Room(
 data class User(
     var username: String? = "",
     var score: Int = 0,
-    var color: String? = ""
+    var color: String? = "",
+    var image: String? = ""
 )
 
 data class Quiz(
