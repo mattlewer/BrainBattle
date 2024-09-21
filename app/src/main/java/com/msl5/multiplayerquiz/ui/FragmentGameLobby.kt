@@ -18,7 +18,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.gusakov.library.start
 import com.msl5.multiplayerquiz.*
 import com.msl5.multiplayerquiz.databinding.FragmentGameLobbyBinding
 import com.msl5.multiplayerquiz.dataclass.User
@@ -116,10 +115,14 @@ class FragmentGameLobby : Fragment() {
                     if(snapshot.value.toString() == "InProgress"){
                         removeListeners()
                         binding.pulseCountDown.visibility = View.VISIBLE
-                        binding.pulseCountDown.start()
-                        var timer = object: CountDownTimer(5000, 1000){
+                        object: CountDownTimer(6000, 1000){
                             override fun onTick(p0: Long) {
-                                // Do nothing
+                                val figureToShow: String = (p0 / 1000).toString()
+                                if(figureToShow == "0"){
+                                    binding.pulseCountDown.text = "GO!"
+                                }else{
+                                    binding.pulseCountDown.text = figureToShow
+                                }
                             }
                             override fun onFinish() {
                                 navController!!.navigate(R.id.fragmentGameQuestion)

@@ -29,7 +29,6 @@ data class Question(
 
 data class Answer(
         var answer: String = "",
-//        var answered: MutableList<String> = mutableListOf()
         var answered: MutableList<User> = mutableListOf()
 )
 

@@ -17,7 +17,7 @@ import com.msl5.multiplayerquiz.dataclass.User
 import com.msl5.multiplayerquiz.util.GetImage
 import com.msl5.multiplayerquiz.util.GetQuiz
 
-var URL = "https://kotlin-multiplayer-quiz-default-rtdb.europe-west1.firebasedatabase.app/"
+var URL = "FIREBASE_REALTIME_URL_HERE"
 var username = "null"
 var code = "null"
 var codeFound = false
@@ -110,6 +110,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
+                    println("--------------------------------")
+                    println(error)
                     TODO("Not yet implemented")
                 }
             })
